@@ -16,8 +16,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import UserRating from '@/components/user-rating';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import type { Connection } from '@/lib/types';
 
-const connections = [
+
+const mockConnections = [
   {
     user: {
       name: 'Olivia Martin',
@@ -75,12 +79,47 @@ const connections = [
   },
 ];
 
-export default function RecentConnections() {
+async function getConnections(): Promise<(Partial<Connection> & { user: { name: string; email: string; avatar: string }})[]> {
+  if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+    console.log("Firebase config not found, using mock data for recent connections.");
+    return mockConnections;
+  }
+  
+  try {
+    const connectionsCol = collection(db, 'connections');
+    const q = query(connectionsCol, orderBy('timestamp', 'desc'), limit(5));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+        console.log("No documents in 'connections' collection. Displaying fallback data. Please add some documents to your Firestore database with a 'timestamp' field.");
+        return mockConnections;
+    }
+
+    const connections = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Connection[];
+    
+    return connections;
+  } catch (e) {
+    console.error("Failed to fetch connections from Firestore. Your database might not be set up correctly yet. Falling back to mock data.", e);
+    return mockConnections;
+  }
+}
+
+export default async function RecentConnections() {
+  const connections = await getConnections();
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Recent Connections</CardTitle>
-        <CardDescription>An overview of your recent sharing activity.</CardDescription>
+        <CardDescription>
+          {process.env.NEXT_PUBLIC_FIREBASE_API_KEY 
+            ? "An overview of your recent sharing activity from Firestore."
+            : "An overview of your recent sharing activity (using mock data)."
+          }
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -95,7 +134,7 @@ export default function RecentConnections() {
           </TableHeader>
           <TableBody>
             {connections.map((connection, index) => (
-              <TableRow key={index}>
+              <TableRow key={connection.id || index}>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-9 w-9">
