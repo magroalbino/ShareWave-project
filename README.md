@@ -1,4 +1,4 @@
-# Firebase Studio
+# ShareWave-project
 
 This is a NextJS starter in Firebase Studio.
 
