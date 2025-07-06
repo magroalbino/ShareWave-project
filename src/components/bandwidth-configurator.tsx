@@ -27,17 +27,29 @@ export default function BandwidthConfigurator({ id, price, onPriceChange }: { id
       return;
     }
     setLoading(true);
+
+    const mockUsers = [
+      { name: 'Alex Johnson', email: 'alex@email.com', avatar: 'https://placehold.co/40x40.png?text=AJ' },
+      { name: 'Ben Carter', email: 'ben.c@email.com', avatar: 'https://placehold.co/40x40.png?text=BC' },
+      { name: 'Casey Day', email: 'casey.day@email.com', avatar: 'https://placehold.co/40x40.png?text=CD' },
+    ];
+    const randomUser = mockUsers[Math.floor(Math.random() * mockUsers.length)];
+
     try {
-      await addDoc(collection(db, 'sharing_sessions'), {
+      await addDoc(collection(db, 'connections'), {
         downloadSpeed: download,
         uploadSpeed: upload,
         pricePerGB: price,
-        status: 'active',
-        createdAt: serverTimestamp(),
+        status: 'Active',
+        timestamp: serverTimestamp(),
+        user: randomUser,
+        dataTransferred: `${(Math.random() * 5).toFixed(1)} GB`,
+        duration: `0h ${Math.floor(Math.random() * 30 + 5)}m`,
+        rating: +(Math.random() * (5 - 4) + 4).toFixed(1),
       });
       toast({
         title: 'Success!',
-        description: 'You are now sharing your bandwidth.',
+        description: 'New connection is active. Check the "Recent Connections" table.',
       });
     } catch (error) {
       console.error('Error starting sharing session:', error);
