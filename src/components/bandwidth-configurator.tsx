@@ -11,7 +11,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 
-export default function BandwidthConfigurator() {
+export default function BandwidthConfigurator({ id }: { id?: string }) {
   const [download, setDownload] = useState(50);
   const [upload, setUpload] = useState(20);
   const [price, setPrice] = useState(0.5);
@@ -53,7 +53,7 @@ export default function BandwidthConfigurator() {
   };
 
   return (
-    <Card>
+    <Card id={id}>
       <CardHeader>
         <CardTitle>Bandwidth Allocation</CardTitle>
         <CardDescription>Specify the bandwidth you want to share.</CardDescription>

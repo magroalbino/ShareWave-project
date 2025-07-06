@@ -56,7 +56,7 @@ export default function Dashboard() {
           </Card>
 
           <div className="space-y-8">
-            <BandwidthConfigurator />
+            <BandwidthConfigurator id="bandwidth-configurator" />
             <SmartPricingForm />
           </div>
         </div>
