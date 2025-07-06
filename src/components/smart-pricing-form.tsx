@@ -24,7 +24,7 @@ const formSchema = z.object({
   currentPrice: z.coerce.number().min(0, { message: 'Price must be positive.' }),
 });
 
-export default function SmartPricingForm() {
+export default function SmartPricingForm({ onApplyRecommendation }: { onApplyRecommendation: (price: number) => void }) {
   const [loading, setLoading] = useState(false);
   const [recommendation, setRecommendation] = useState<SmartPricingRecommendationOutput | null>(null);
   const { toast } = useToast();
@@ -137,12 +137,24 @@ export default function SmartPricingForm() {
               )}
             />
              {recommendation && (
-              <Alert className="mt-4 bg-accent/20">
+              <Alert className="mt-4 bg-accent/20 border-accent/50">
                 <Lightbulb className="h-4 w-4 text-accent-foreground" />
-                <AlertTitle>
-                  Recommended Price: ${recommendation.recommendedPrice.toFixed(2)} / GB
-                </AlertTitle>
-                <AlertDescription>{recommendation.reasoning}</AlertDescription>
+                <div className="flex justify-between items-start gap-4 ml-7">
+                  <div>
+                    <AlertTitle>
+                      Recommended Price: ${recommendation.recommendedPrice.toFixed(2)} / GB
+                    </AlertTitle>
+                    <AlertDescription>{recommendation.reasoning}</AlertDescription>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="shrink-0 bg-transparent hover:bg-accent/40 border-accent-foreground/50 text-accent-foreground"
+                    onClick={() => onApplyRecommendation(recommendation.recommendedPrice)}
+                  >
+                    Apply
+                  </Button>
+                </div>
               </Alert>
             )}
           </CardContent>

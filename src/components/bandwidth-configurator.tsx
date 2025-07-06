@@ -11,10 +11,9 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 
-export default function BandwidthConfigurator({ id }: { id?: string }) {
+export default function BandwidthConfigurator({ id, price, onPriceChange }: { id?: string; price: number, onPriceChange: (price: number) => void }) {
   const [download, setDownload] = useState(50);
   const [upload, setUpload] = useState(20);
-  const [price, setPrice] = useState(0.5);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -83,7 +82,7 @@ export default function BandwidthConfigurator({ id }: { id?: string }) {
           <Label htmlFor="price">Price per GB</Label>
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">$</span>
-            <Input id="price" type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value) || 0)} placeholder="0.50" className="pl-7" />
+            <Input id="price" type="number" value={price} onChange={(e) => onPriceChange(parseFloat(e.target.value) || 0)} placeholder="0.50" className="pl-7" />
           </div>
         </div>
       </CardContent>

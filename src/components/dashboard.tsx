@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowDownUp, DollarSign, Wifi, Zap } from 'lucide-react';
 import AppHeader from '@/components/header';
@@ -6,6 +8,7 @@ import BandwidthConfigurator from '@/components/bandwidth-configurator';
 import SmartPricingForm from '@/components/smart-pricing-form';
 import RecentConnections from '@/components/recent-connections';
 import Image from 'next/image';
+import { useState } from 'react';
 
 const hotspots = [
   { top: '20%', left: '15%' },
@@ -16,6 +19,8 @@ const hotspots = [
 ];
 
 export default function Dashboard() {
+  const [price, setPrice] = useState(0.5);
+  
   return (
     <div className="flex-1 space-y-4 bg-background">
       <AppHeader />
@@ -56,8 +61,8 @@ export default function Dashboard() {
           </Card>
 
           <div className="space-y-8">
-            <BandwidthConfigurator id="bandwidth-configurator" />
-            <SmartPricingForm />
+            <BandwidthConfigurator id="bandwidth-configurator" price={price} onPriceChange={setPrice} />
+            <SmartPricingForm onApplyRecommendation={setPrice} />
           </div>
         </div>
 
