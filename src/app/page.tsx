@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LayoutGrid, Wifi, DollarSign, Settings, LogOut, Waves } from 'lucide-react';
 import Dashboard from '@/components/dashboard';
+import RecentConnections from '@/components/recent-connections';
 
 export default function Home() {
   return (
@@ -79,7 +80,9 @@ export default function Home() {
         </SidebarHeader>
       </Sidebar>
       <SidebarInset>
-        <Dashboard />
+        <Dashboard>
+          <RecentConnections />
+        </Dashboard>
       </SidebarInset>
     </SidebarProvider>
   );

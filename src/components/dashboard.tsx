@@ -6,7 +6,6 @@ import AppHeader from '@/components/header';
 import StatsCard from '@/components/stats-card';
 import BandwidthConfigurator from '@/components/bandwidth-configurator';
 import SmartPricingForm from '@/components/smart-pricing-form';
-import RecentConnections from '@/components/recent-connections';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -18,7 +17,7 @@ const hotspots = [
   { top: '80%', left: '45%' },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ children }: { children: React.ReactNode }) {
   const [price, setPrice] = useState(0.5);
   
   return (
@@ -66,7 +65,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <RecentConnections />
+        {children}
       </main>
     </div>
   );
